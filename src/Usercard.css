@@ -1,0 +1,80 @@
+.card_body{
+    margin-left: 5em;
+    margin-right: 5em;
+    margin-top:1em;
+    margin-bottom: 1em;
+    padding: 0.25em;
+}
+.details{
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 100px 200px;
+}
+.btns{
+    margin-top: 0.25em; 
+}
+.other_data{
+    background-color: rosybrown;
+}
+.d_btn{
+    background-color: lightseagreen;
+}
+.closebtns{
+    padding-left: 200px;
+}
+.class_red{
+    border:2px solid red;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+}
+
+.class_green{
+    border: 2px solid green;
+    padding-left: 0.25em;
+    padding-right: 0.25em;
+}
+#class_visible{
+    display: block;
+}
+#class_hide{
+    display: none;
+}
+#class_visible_modal{
+    display: block;
+    position:fixed;
+    left: 55%;
+    box-shadow: 5px 5px 5px rgb(0,0,0);
+    transition: transform 1s;
+    z-index:200;
+    background-color: lightgreen;
+    max-width:600px;
+    overflow:auto;
+    height: 200px;
+}
+#class_hide_modal{
+    display: none;
+}
+#hoverData{
+    margin-top: 0.25em;
+    display: grid;
+    grid-gap: 10px;
+    grid-template-columns: 100px 200px;
+}
+.show_class{
+    visibility: visible;
+}
+.hide_class{
+    visibility: hidden;
+}
+.class_pink{
+    background-color: pink;
+}
+.class_white{
+    background-color: white;
+}
+.no_border{
+    border: none;
+}
+#id_input{
+    margin-bottom: 0.5em;
+}

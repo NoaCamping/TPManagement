@@ -1,0 +1,20 @@
+.mainn{
+    margin-left: 400px;
+    position: absolute;
+    filter: blur(0);
+    opacity: 1;
+    width: 500px;
+}
+.lbl_tp{
+    
+    position: initial;
+    
+}
+#add_todos{
+   margin-left: 50px;  
+}
+#add_posts{
+   margin-left: 50px;   
+}
+
+

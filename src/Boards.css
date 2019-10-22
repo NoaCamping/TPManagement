@@ -1,0 +1,15 @@
+.main{  
+    padding:0.5em;
+}
+.innerbox{
+    border: 2px solid black;
+    padding:1em;
+    
+}
+
+#add_todos{
+    margin-bottom:0.5em;
+}
+#Todos{
+    margin-bottom:4em;
+}
