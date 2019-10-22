@@ -3,6 +3,7 @@ import {firebase} from './firebase/firebase';
 import './Usercard.css';
 import './Searchrow.css';
 import Usercard from './Usercard';
+import Adduser from './Adduser';
 import axios from 'axios';
 
 class Searchrow extends React.Component{
@@ -100,7 +101,7 @@ class Searchrow extends React.Component{
 
     add_user=()=>{
         this.setState({"add_user_screen_on": true});
-        alert("user screen is on");
+        //alert("user screen is on");
     }
  
     render(){
@@ -110,6 +111,11 @@ class Searchrow extends React.Component{
                     <div id="row_position">
                         Search <input type="text" onChange={this.search_word} id="text_id"/> &nbsp;
                         <input type="button" value="Add" className="d_btn" onClick={this.add_user} />
+                    </div>
+                    <div className="add_mission"
+                    id={this.state.add_user_screen_on?"see_card":"hide_card"}
+                    >
+                        <Adduser/>
                     </div>
                     <Usercard 
                     filteredpeople={this.state.filtered_data}

@@ -2,3 +2,19 @@
     margin-top: 0.25em;
     text-align: center;
 }
+.add_mission{
+    background-color: paleturquoise;
+    margin: 1em;
+    padding: 1em;
+    border: 1px solid black;
+}
+#see_card{
+    visibility: visible;
+    position: fixed;
+    left: 60%;
+}
+#hide_card{
+    visibility:hidden;
+    position: fixed;
+    left: 60%;
+}
