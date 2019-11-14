@@ -18,6 +18,7 @@ class Searchrow extends React.Component{
             "filtered_data":[],
             "search_was_done": false,
             "add_user_screen_on": false
+            
         }
         
     }
@@ -43,7 +44,7 @@ class Searchrow extends React.Component{
                     counter++;
                     task_arr.push("true");  
             }
-            
+           
             this.setState({employees: people});
             this.setState({numofemployees: counter-1});
             
@@ -71,6 +72,8 @@ class Searchrow extends React.Component{
         
     }
 
+    //function searches clients who have a specific sub-string in their full name or email
+    //the sub-string is given by the user
     search_db=()=>{
         let currentcomponent=this;
         let txt=document.getElementById("text_id").value;
@@ -101,7 +104,27 @@ class Searchrow extends React.Component{
 
     add_user=()=>{
         this.setState((prevState)=>{return {"add_user_screen_on": !prevState.add_user_screen_on}});
+        this.updateManuallyAddedClients();
         
+    }
+
+    updateManuallyAddedClients=()=>{
+        let ref=firebase.database().ref('ManuallyInsertedClients');
+        let wholeclients=this.state.employees;
+        let counter1=this.state.numofemployees;
+        ref.on("child_added",function(snapshot){
+            let ad_client=snapshot.val();
+            let thename=firebase.database().ref('A').child(counter1).name;
+            let theemail=firebase.database().ref('A').child(counter1).email;
+            if(thename!==ad_client.name && theemail!==ad_client.email)
+                    firebase.database().ref('A').child(counter1+1).set(ad_client);
+            counter1++;
+            if(wholeclients[wholeclients.length-1].name!==ad_client.name && wholeclients[wholeclients.length-1].email!==ad_client.email)
+                    wholeclients.push(ad_client);  
+        })
+        ref.remove();
+        this.setState(()=>{return {"numofemployees": counter1, "employees":wholeclients}})
+
     }
  
     render(){

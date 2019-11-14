@@ -31,10 +31,15 @@ class Adduser extends React.Component{
         //updating user in firebase DB
         //number of employees
         await this.countNumberOfEmployees();       
+        firebase.database().ref('ManuallyInsertedClients').child(this.state.e_number+1).set({"id":this.state.e_number+1,"name": u_name, "email": u_email,
+    "address":{
+        "street":"", "city":"","zipcode":""}
+    });
         firebase.database().ref('A').child(this.state.e_number+1).set({"name": u_name, "email": u_email});
         firebase.database().ref('Posts').child(this.state.e_number+1).set({"userId": this.state.e_number+1});
         firebase.database().ref('Tasks').child(this.state.e_number+1).set({"userId": this.state.e_number+1});
-        alert("client was added "+u_name+", "+u_email);
+                
+        //alert("client was added "+u_name+", "+u_email);
         //closing the box of add_user
         this.props.closeBox(e);
         }
