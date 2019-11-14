@@ -15,7 +15,6 @@ class Adduser extends React.Component{
         document.getElementById("useremail").value="";
         //closing the box of add_user
         this.props.closeBox(e);
-        alert("key was pressed");
     }
     Updateclient=async(e)=>{
         let u_name=document.getElementById("username").value;
