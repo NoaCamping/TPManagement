@@ -100,8 +100,8 @@ class Searchrow extends React.Component{
     }
 
     add_user=()=>{
-        this.setState({"add_user_screen_on": true});
-        //alert("user screen is on");
+        this.setState((prevState)=>{return {"add_user_screen_on": !prevState.add_user_screen_on}});
+        
     }
  
     render(){
@@ -115,7 +115,7 @@ class Searchrow extends React.Component{
                     <div className="add_mission"
                     id={this.state.add_user_screen_on?"see_card":"hide_card"}
                     >
-                        <Adduser/>
+                        <Adduser closeBox={this.add_user}/>
                     </div>
                     <Usercard 
                     filteredpeople={this.state.filtered_data}
