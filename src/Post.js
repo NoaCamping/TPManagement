@@ -13,7 +13,6 @@ class Post extends React.Component{
 
         return(
             <div>
-                <h4>user id: {this.props.value.userId}</h4>
                 <h4>Title: &nbsp; {this.state.title}</h4>
                 <h4>Body: &nbsp; {this.state.body}</h4>
             </div>

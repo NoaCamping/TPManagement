@@ -10,7 +10,7 @@ class Pboard extends React.Component{
         super(props);
 
         this.state={
-            "e_number":0,
+            "e_number":this.props.numOfE,
             "all_posts":[],
             "c_id": this.props.given_id
         }
@@ -24,10 +24,10 @@ class Pboard extends React.Component{
 
     async componentDidMount(){
         //number of employees
-        await axios.get(`https://jsonplaceholder.typicode.com/users`)
+        /*await axios.get(`https://jsonplaceholder.typicode.com/users`)
         .then(resp=>{
             this.setState({e_number: resp.data.length});
-        });
+        });*/
 
         //Posts  - arranging DB according to userId number
         let jarr=[];
@@ -65,9 +65,10 @@ class Pboard extends React.Component{
         let parr=[];
         for(var i=0; i<theposts.length; i++)
         {
-            if(theposts[i].userId===this.state.c_id)
+            if(theposts[i].userId===parseInt(this.state.c_id))
                 parr.push(theposts[i])
         }
+        
         return(
             <div className="main">
                 

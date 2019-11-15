@@ -1,14 +1,11 @@
-.mainn{
-    margin-left: 400px;
-    position: absolute;
-    filter: blur(0);
-    opacity: 1;
-    width: 500px;
+.main{
+    width:600px;
+    
 }
 .lbl_tp{
-    
-    position: initial;
-    
+   display:block;
+   overflow: scroll;
+   max-height:200px;
 }
 #add_todos{
    margin-left: 50px;  

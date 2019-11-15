@@ -17,7 +17,8 @@ class Usercard extends React.Component{
             "search_was_done": false,
             "hover":false,
             "deleted_pressed":false,
-            "background_changed":"white"
+            "background_changed":"white",
+            "whoneedscolor":""
         }
         
                     
@@ -67,9 +68,9 @@ class Usercard extends React.Component{
            }
         
         background_change=(e)=>{
-            var needColor=e.target.value;
-            this.setState({"whoneedscolor": needColor});
-            //alert(needColor);        
+            var needColor=e.target.value;  //number of client that was clicked
+            this.setState(()=>{return{"whoneedscolor": needColor}});
+                  
             if(this.state.background_changed==="white")
             {
                 this.setState({background_changed: "pink"});
@@ -81,7 +82,6 @@ class Usercard extends React.Component{
                 this.setState({background_changed: "white"});
                 
             }       
-            //alert("last color was: "+this.state.background_changed);
         }
 
         updateId=(c_id)=>{
@@ -108,12 +108,16 @@ class Usercard extends React.Component{
                                     <div>
                                     ID: &nbsp; <input type="text" value={employee.id} id="id_input" readOnly
                                       onClick={this.background_change} className="no_border" />
-                                        <div id={this.state.background_changed==="pink"?"class_visible_modal":"class_hide_modal"}>
-                                            <Activeside c_id={employee.id}/>
-                                        </div>
 
-                                     
                                     </div>
+                                    { this.state.background_changed==="pink"?
+                                        <div id="class_visible_popup">
+                                                <Activeside c_id={this.state.whoneedscolor}/>
+                                        </div>
+                                       :
+                                       null
+                                            
+                                        }
 
                                     <div className="details">
                                         Name: <input type="text" defaultValue={employee.name} id="name_input"/> 

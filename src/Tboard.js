@@ -3,7 +3,6 @@ import Task from './Task';
 import {firebase} from './firebase/firebase';
 import axios from 'axios';
 import './Boards.css';
-import {connect} from "react-redux";
 
 class Tboard extends React.Component{
 
@@ -11,7 +10,7 @@ class Tboard extends React.Component{
         super(props);
 
         this.state={
-            "e_number":0,
+            "e_number":this.props.numOfE,
             "all_tasks":[],
             "c_id": this.props.given_id
         }
@@ -24,18 +23,19 @@ class Tboard extends React.Component{
 
 
     async componentDidMount(){
-        
+
         //number of employees
-        await axios.get('https://jsonplaceholder.typicode.com/users')
+        /*await axios.get('https://jsonplaceholder.typicode.com/users')
         .then(resp=>{
             this.setState({e_number: resp.data.length});
-        });
+        });*/
 
         //Posts  - arranging DB according to userId number
         let p__counter=1;
         await axios.get('https://jsonplaceholder.typicode.com/todos')
         .then(resp=>{
             const taskbox=resp.data;
+            
             this.setState({"all_tasks": taskbox});
 
             //deleting old information from DB in case DB is not empty
@@ -57,12 +57,14 @@ class Tboard extends React.Component{
            })  
     }
 
+   
+
     render(){
         let thetasks=this.state.all_tasks;
         let tarr=[];
         for(var i=0; i<thetasks.length; i++)
         {
-            if(thetasks[i].userId===this.state.c_id)
+            if(thetasks[i].userId===parseInt(this.state.c_id))
                 tarr.push(thetasks[i])
         }
         return(

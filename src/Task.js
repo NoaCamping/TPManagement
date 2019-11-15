@@ -10,7 +10,7 @@ class Task extends React.Component{
 
     mark_completed=async()=>{
         await this.setState({completed: true});
-        alert(this.state.completed);
+        //alert(this.state.completed);
         //further... maybe updating db - not sure if needed
     }
 
@@ -22,10 +22,11 @@ class Task extends React.Component{
         return(
             <div>
                 <h3>Title: &nbsp; {this.state.title}</h3>
-                <h3>Completed: &nbsp; {this.state.completed}
-                {(!this.state.completed)?
+                <h3>
+                {(!this.state.completed)?<div>Completed:
                 <input type="button" value="Mark Completed" onClick={this.mark_completed} style={{"backgroundColor": "orange","padding":"0.5em"}}/>
-                :<div></div>
+                </div>
+                :<div>Completed: &nbsp; &nbsp; True</div>
                 }
                 </h3>
             </div>
