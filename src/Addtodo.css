@@ -1,0 +1,10 @@
+#todo-box{
+    background-color: orange;
+    border:2px solid black;
+}
+#btns-todos{
+ display: grid;
+ grid-template-columns: auto auto;
+ margin-left: 300px;
+ column-gap: 20px;   
+}
