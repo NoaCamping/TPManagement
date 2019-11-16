@@ -11,8 +11,8 @@ class Addtodo extends React.Component{
             <div className="todo-box">
                 <h4>Title: &nbsp; &nbsp;<input type="text" placeholder="Title"/></h4>
                 <div id="btns-todos">
-                    <input type="button" onClick={e=>{this.props.closeAddTodo(e)}} value="Cancel"/>
-                    <input type="button" value="Add"/>
+                    <input type="button" onClick={e=>{this.props.closeAddTodo(e)}} value="Cancel" id="addtodo-btn"/>
+                    <input type="button" value="Add" id="addtodo-btn"/>
                 </div>
             </div>
         );

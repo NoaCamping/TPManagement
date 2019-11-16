@@ -9,13 +9,14 @@ class Usercard extends React.Component{
     constructor(props){
         super(props);
 
+     
         this.state={
             "filters_result":[],
             "employees":[], 
             "completed_tasks":[],
             "numofemployees":0,
             "search_was_done": false,
-            "hover":false,
+            "hover":[],
             "deleted_pressed":false,
             "background_changed":"white",
             "whoneedscolor":""
@@ -25,6 +26,11 @@ class Usercard extends React.Component{
     }
 
     UNSAFE_componentWillReceiveProps(){
+        let hoverAll=[false];
+        for(var i=1; i<=this.props.employees.length; i++)
+        {
+            hoverAll.push(false);
+        }
         
         this.setState({
             "filters_result":this.props.filteredpeople,
@@ -32,21 +38,24 @@ class Usercard extends React.Component{
             "completed_tasks":this.props.completed_tasks,
             "numofemployees":this.props.numofemployees,
             "search_was_done": this.props.search_was_done,
-            "hover":false
-                })
-                               
+            "hover":hoverAll
+                })                      
       }
 
       mousehovering=(e)=>{
             e.preventDefault();
             var userid=e.target.id;
-            this.setState({hover: true});
-       
+            var hover_temp=this.state.hover;
+            hover_temp[userid]=true;
+            this.setState({hover: hover_temp});
+
       }
       mousefinishedhovering=(e)=>{
         e.preventDefault();
         var userid=e.target.id;
-        this.setState({hover: false});
+        var hover_temp=this.state.hover;
+        hover_temp[userid]=false;
+        this.setState({hover: hover_temp});
       }
 
       updateEmployee=(e)=>{
@@ -133,7 +142,7 @@ class Usercard extends React.Component{
                                         />
                                         &nbsp; &nbsp; &nbsp;
                                         <div id="hoverData"
-                                        className={this.state.hover?"show_class":"hide_class"}
+                                        className={this.state.hover[employee.id]===true?"show_class":"hide_class"}
                                         >
                                             Street: <input type="text" defaultValue={employee.address.street}/> 
                                             City: <input type="text" defaultValue={employee.address.city}/> 

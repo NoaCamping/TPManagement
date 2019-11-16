@@ -1,10 +1,16 @@
-#todo-box{
-    background-color: orange;
-    border:2px solid black;
+.todo-box{
+    border:1px solid black;
+    margin-bottom:10px;
+    padding:1em;
+    text-align:center;
 }
 #btns-todos{
  display: grid;
  grid-template-columns: auto auto;
  margin-left: 300px;
  column-gap: 20px;   
+}
+#addtodo-btn{
+    background-color: lightseagreen;
+    padding:0.25em;
 }
