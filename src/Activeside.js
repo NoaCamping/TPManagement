@@ -9,10 +9,15 @@ class Activeside extends React.Component{
     constructor(props){
         super(props);
 
-        this.state={"c_id":this.props.c_id,"e_number":0, "newtodo":false,"task_counter":0,
+        this.state={"c_id":this.props.c_id,"e_number":0, "newtodo":false,"task_counter":this.props.tc,
          "numOfTasksPerClient":new Array(this.props.e_number).fill(0)}
     }
   
+    componentWillUnmount=()=>{
+        //saving value of task_counter for more clients to come
+        this.props.updateTaskCounter(this.state.task_counter);
+        console.log(this.state.task_counter);
+    }
     numOfE=async()=>{
         //number of employees
         await axios.get(`https://jsonplaceholder.typicode.com/users`)
@@ -31,14 +36,15 @@ class Activeside extends React.Component{
                 {return {"newtodo": !prevState.newtodo}
                 });
     }
-    newToDo2=()=>{
+    newToDo2=(e)=>{
+        
             this.setState(prevState=>
                 {return {"newtodo": !prevState.newtodo}
                 });
     }
-    addOneTaskCounter=()=>{
-        let item=this.state.task_counter;
-        this.setState(()=>{return{"task_counter":parseInt(item+1)}})
+    addOneTaskCounter=(e)=>{
+        let temp=this.state.task_counter;
+        this.setState({"task_counter": parseInt(temp+1)});
     }
     addOneTasksPerClients=(index)=>{
         let items=this.state.numOfTasksPerClient;

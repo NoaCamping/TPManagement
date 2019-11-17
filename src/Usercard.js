@@ -19,7 +19,8 @@ class Usercard extends React.Component{
             "hover":[],
             "deleted_pressed":false,
             "background_changed":"white",
-            "whoneedscolor":""
+            "whoneedscolor":"",
+            "task_counter":0
         }
         
                     
@@ -100,7 +101,16 @@ class Usercard extends React.Component{
             //alert("id was updated with: "+c_id);
         };
 
-
+        /*addTC=()=>{
+            let temp=this.state.task_counter;
+            temp=parseInt(temp+1);
+            //console.log("number of folder: "+temp);
+            this.setState(()=>{return{"task_counter": temp}})
+        }*/
+        updateTaskCounter=(savedVal)=>{
+                this.setState({"task_counter": savedVal});
+        }
+        
     render(){
         
         
@@ -121,7 +131,8 @@ class Usercard extends React.Component{
                                     </div>
                                     { this.state.background_changed==="pink"?
                                         <div id="class_visible_popup">
-                                                <Activeside c_id={this.state.whoneedscolor} e_number={this.state.numofemployees}/>
+                                                <Activeside c_id={this.state.whoneedscolor} e_number={this.state.numofemployees}
+                                                updateTaskCounter={this.updateTaskCounter} tc={this.state.task_counter}/>
                                         </div>
                                        :
                                        null

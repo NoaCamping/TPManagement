@@ -61,12 +61,12 @@ class Tboard extends React.Component{
              let db_source=firebase.database().ref("TasksExtra");
              if(db_source)
              {        
-               db_source.on("child_added",function(snapshot){
+               db_source.on("value",function(snapshot){
                    //console.log(snapshot.child("1").val());
                    if(snapshot.child(numOfSons)!==null)
                    {
-                    //console.log(snapshot.child(numOfSons).val());
-                    firebase.database().ref('Tasks').child(p__counter).set(snapshot.child(numOfSons).val()); 
+                    console.log(snapshot.child(numOfSons).val());
+                    //firebase.database().ref('Tasks').child(p__counter).set(snapshot.child(numOfSons).val()); 
                     numOfSons++
                    }
                })

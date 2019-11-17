@@ -9,7 +9,8 @@ class Addtodo extends React.Component{
         //this.state={"title":"","userid":"", "tc":"", "missionid":""}
     }
    
-    addNewMission=(e)=>{
+    addNewMission=async(e)=>{
+        
         let newTitle=document.getElementsByName("title")[0].value;
         let userid=this.props.c_id;
         let tc=this.props.task_counter;
@@ -27,13 +28,13 @@ class Addtodo extends React.Component{
         //updating number of added tasks for each client
         //temp_added_tasks[userid-1]++;
         
-        console.log("temp_added_tasks: "+this.props.numOfTasksPerClient);
-        console.log("task counter is: "+this.props.task_counter);
+        //console.log("temp_added_tasks: "+this.props.numOfTasksPerClient);
+        //console.log("task counter is: "+this.props.task_counter);
         this.props.addOnePerClients(userid-1);
-        this.props.addOne(e);    
+        await this.props.addOne(e);    
         
         //closing the textbox
-        this.props.closeAddTodo(e);   
+        await this.props.closeAddTodo(e);   
        
     }
   
