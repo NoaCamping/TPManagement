@@ -41,37 +41,44 @@ class Tboard extends React.Component{
             //deleting old information from DB in case DB is not empty
             firebase.database().ref('Tasks').remove();
             //inserting data 
+            let numOfTasksPerClient=new Array(10).fill(0);
             let jarr2=[];
             for(let item of taskbox)
             {       
                     if(item.userId===p__counter)
+                    {
                         jarr2.push(item);
+                        //counting how many tasks per client
+                        numOfTasksPerClient[p__counter-1]++;
+                    }   
                     else{
                         firebase.database().ref('Tasks').child(p__counter).set(jarr2);
                         p__counter++;
+                        numOfTasksPerClient[p__counter-1]++;
                         jarr2=[];
                         jarr2.push(item);
                     }
             }
-           
             firebase.database().ref('Tasks').child(p__counter).set(jarr2);
              //inserting tasks inserted manually
-             /*p__counter++;
+             //p__counter++;
              
              let db_source=firebase.database().ref("TasksExtra");
              if(db_source)
              {        
                db_source.on("value",function(snapshot){
                    //console.log(snapshot.child("1").val());
-                   if(snapshot.child(numOfSons)!==null)
+                   if(snapshot.child(numOfSons)!==null && snapshot.child(numOfSons).val()!==null)
                    {
-                    console.log(snapshot.child(numOfSons).val());
-                    //firebase.database().ref('Tasks').child(p__counter).set(snapshot.child(numOfSons).val()); 
+                    //console.log(snapshot.child(numOfSons).val());
+                    let currentid=snapshot.child(numOfSons).val().userId;
+                    firebase.database().ref('Tasks').child(currentid).child(parseInt(numOfTasksPerClient[numOfSons])).set(snapshot.child(numOfSons).val()); 
+                    numOfTasksPerClient[numOfSons]++;
                     numOfSons++
                    }
                })
-                        //firebase.database().ref('Tasks').child(p__counter).set("hello");      
-                 }*/
+                       
+                 }
                 
            })  
     }
