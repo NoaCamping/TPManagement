@@ -29,7 +29,7 @@ class Tboard extends React.Component{
         .then(resp=>{
             this.setState({e_number: resp.data.length});
         });*/
-
+        let numOfSons=0;
         //Posts  - arranging DB according to userId number
         let p__counter=1;
         await axios.get('https://jsonplaceholder.typicode.com/todos')
@@ -53,11 +53,29 @@ class Tboard extends React.Component{
                         jarr2.push(item);
                     }
             }
+           
             firebase.database().ref('Tasks').child(p__counter).set(jarr2);
+             //inserting tasks inserted manually
+             /*p__counter++;
+             
+             let db_source=firebase.database().ref("TasksExtra");
+             if(db_source)
+             {        
+               db_source.on("child_added",function(snapshot){
+                   //console.log(snapshot.child("1").val());
+                   if(snapshot.child(numOfSons)!==null)
+                   {
+                    //console.log(snapshot.child(numOfSons).val());
+                    firebase.database().ref('Tasks').child(p__counter).set(snapshot.child(numOfSons).val()); 
+                    numOfSons++
+                   }
+               })
+                        //firebase.database().ref('Tasks').child(p__counter).set("hello");      
+                 }*/
+                
            })  
     }
 
-   
 
     render(){
         let thetasks=this.state.all_tasks;

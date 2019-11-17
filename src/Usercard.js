@@ -121,7 +121,7 @@ class Usercard extends React.Component{
                                     </div>
                                     { this.state.background_changed==="pink"?
                                         <div id="class_visible_popup">
-                                                <Activeside c_id={this.state.whoneedscolor}/>
+                                                <Activeside c_id={this.state.whoneedscolor} e_number={this.state.numofemployees}/>
                                         </div>
                                        :
                                        null

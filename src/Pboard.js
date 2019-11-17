@@ -3,7 +3,6 @@ import Post from './Post';
 import {firebase} from './firebase/firebase';
 import axios from 'axios';
 import './Boards.css';
-import {connect} from "react-redux";
 
 class Pboard extends React.Component{
     constructor(props){

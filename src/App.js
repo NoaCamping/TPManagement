@@ -1,7 +1,6 @@
 import React from 'react';
 import './App.css';
 import Searchrow from './Searchrow';
-import Activeside from './Activeside';
 import './firebase/firebase';
 
 

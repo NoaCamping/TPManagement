@@ -4,13 +4,13 @@ import Tboard from './Tboard';
 import Pboard from './Pboard';
 import axios from 'axios';
 import Addtodo from './Addtodo';
-import {connect} from "react-redux";
 
 class Activeside extends React.Component{
     constructor(props){
         super(props);
 
-        this.state={"c_id":this.props.c_id,"e_number":0, "newtodo":false}
+        this.state={"c_id":this.props.c_id,"e_number":0, "newtodo":false,"task_counter":0,
+         "numOfTasksPerClient":new Array(this.props.e_number).fill(0)}
     }
   
     numOfE=async()=>{
@@ -22,7 +22,7 @@ class Activeside extends React.Component{
        
     }
     componentDidMount=async()=>{
-        await this.numOfE();
+        await this.numOfE(); 
     }
     newToDo=(e)=>{
         
@@ -36,6 +36,15 @@ class Activeside extends React.Component{
                 {return {"newtodo": !prevState.newtodo}
                 });
     }
+    addOneTaskCounter=()=>{
+        let item=this.state.task_counter;
+        this.setState(()=>{return{"task_counter":parseInt(item+1)}})
+    }
+    addOneTasksPerClients=(index)=>{
+        let items=this.state.numOfTasksPerClient;
+        items[parseInt(index)]++;
+        this.setState(()=>{return{"numOfTasksPerClient": items}})
+    }
     render(){
         //console.log("inside render active id inside state: "+this.state.c_id)
         
@@ -44,7 +53,9 @@ class Activeside extends React.Component{
                 
                 <div>
                     Todos-User {this.state.c_id} <input type="button" value="Add" id="add_todos" onClick={this.newToDo}/>
-                    {this.state.newtodo===true?<Addtodo closeAddTodo={this.newToDo2}/>:null}  
+                    {this.state.newtodo===true?<Addtodo closeAddTodo={this.newToDo2} c_id={this.state.c_id}
+                    e_number={this.state.e_number} task_counter={this.state.task_counter} addOne={this.addOneTaskCounter}
+                     numOfTasksPerClient={this.state.numOfTasksPerClient} addOnePerClients={this.addOneTasksPerClients}/>:null}  
                 
                 {this.state.newtodo===false?
                     <div>
