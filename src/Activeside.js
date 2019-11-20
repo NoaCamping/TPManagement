@@ -9,15 +9,16 @@ class Activeside extends React.Component{
     constructor(props){
         super(props);
 
-        this.state={"c_id":this.props.c_id,"e_number":0, "newtodo":false,"task_counter":this.props.tc,
+        this.state={"c_id":this.props.c_id,"e_number":0, "newtodo":false,
          "numOfTasksPerClient":new Array(this.props.e_number).fill(0)}
     }
   
     componentWillUnmount=()=>{
-        //saving value of task_counter for more clients to come
-        this.props.updateTaskCounter(this.state.task_counter);
-        console.log(this.state.task_counter);
+        //updating that current task was added successfully
+        this.props.updateFinishTasks();
+        
     }
+  
     numOfE=async()=>{
         //number of employees
         await axios.get(`https://jsonplaceholder.typicode.com/users`)
@@ -29,6 +30,8 @@ class Activeside extends React.Component{
     componentDidMount=async()=>{
         await this.numOfE(); 
     }
+
+    //function updates whether todo-task button was pressed
     newToDo=(e)=>{
         
         if(e.target.id==="add_todos")
@@ -36,20 +39,20 @@ class Activeside extends React.Component{
                 {return {"newtodo": !prevState.newtodo}
                 });
     }
+    //function updates whether todo-task button was pressed  - so it becomes false - when finishing
+    //inseting the new task
     newToDo2=(e)=>{
         
             this.setState(prevState=>
                 {return {"newtodo": !prevState.newtodo}
                 });
     }
-    addOneTaskCounter=(e)=>{
-        let temp=this.state.task_counter;
-        this.setState({"task_counter": parseInt(temp+1)});
-    }
+
+    //updating array of clients, how many tasks, each client has on DB.
     addOneTasksPerClients=(index)=>{
-        let items=this.state.numOfTasksPerClient;
-        items[parseInt(index)]++;
-        this.setState(()=>{return{"numOfTasksPerClient": items}})
+        let currentNumOfTasksPerClient=this.state.numOfTasksPerClient;
+        currentNumOfTasksPerClient[parseInt(index)]++;
+        this.setState(()=>{return{"numOfTasksPerClient": currentNumOfTasksPerClient}})
     }
     render(){
         //console.log("inside render active id inside state: "+this.state.c_id)
@@ -60,13 +63,14 @@ class Activeside extends React.Component{
                 <div>
                     Todos-User {this.state.c_id} <input type="button" value="Add" id="add_todos" onClick={this.newToDo}/>
                     {this.state.newtodo===true?<Addtodo closeAddTodo={this.newToDo2} c_id={this.state.c_id}
-                    e_number={this.state.e_number} task_counter={this.state.task_counter} addOne={this.addOneTaskCounter}
+                    e_number={this.state.e_number}
                      numOfTasksPerClient={this.state.numOfTasksPerClient} addOnePerClients={this.addOneTasksPerClients}/>:null}  
                 
                 {this.state.newtodo===false?
                     <div>
                         <div className="lbl_tp">
-                            <Tboard given_id={this.state.c_id} numOfE={this.state.e_number}/> 
+                            <Tboard given_id={this.state.c_id} numOfE={this.state.e_number} updateFinishTasks={this.props.updateFinishTasks}
+                            fini={this.props.fini}/> 
                         </div>
                         <br/>
                         <br/>

@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 class Task extends React.Component{
     constructor(props){
         super(props);
@@ -8,14 +7,12 @@ class Task extends React.Component{
         this.state={"title":this.props.value.title, "completed": this.props.value.completed}
     }
 
-    mark_completed=async()=>{
-        await this.setState({completed: true});
-        //alert(this.state.completed);
-        //further... maybe updating db - not sure if needed
+    mark_completed=()=>{
+        this.setState({completed: true});
     }
 
     render(){
-        //console.log("data inside task is: "+this.state.title);
+        //if we have notasks at all - don't show anything
         if(!this.props.value)
             return;
 

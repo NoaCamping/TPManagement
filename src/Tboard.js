@@ -12,15 +12,11 @@ class Tboard extends React.Component{
         this.state={
             "e_number":this.props.numOfE,
             "all_tasks":[],
-            "c_id": this.props.given_id
+            "c_id": this.props.given_id,
+            "finishedTasks":false
+            
         }
     }
-  
-    /*UNSAFE_componentWillReceiveProps=()=>{
-        this.setState({c_id: this.props.currentCardId})
-        alert("info from store: "+this.props.currentCardId);
-    }*/
-
 
     async componentDidMount(){
 
@@ -29,30 +25,30 @@ class Tboard extends React.Component{
         .then(resp=>{
             this.setState({e_number: resp.data.length});
         });*/
-        let numOfSons=0;
         //Posts  - arranging DB according to userId number
         let p__counter=1;
         await axios.get('https://jsonplaceholder.typicode.com/todos')
         .then(resp=>{
             const taskbox=resp.data;
-            
             this.setState({"all_tasks": taskbox});
 
             //deleting old information from DB in case DB is not empty
             firebase.database().ref('Tasks').remove();
             //inserting data 
             let numOfTasksPerClient=new Array(10).fill(0);
-            let jarr2=[];
+            let jarr2=[]; //temporary array to save tasks which belong to specific user
             for(let item of taskbox)
             {       
                     if(item.userId===p__counter)
                     {
                         jarr2.push(item);
-                        //counting how many tasks per client
+                        //counting how many tasks on site for specific client
                         numOfTasksPerClient[p__counter-1]++;
                     }   
-                    else{
+                    else
+                    {   //inserting tasks for specific user into DB
                         firebase.database().ref('Tasks').child(p__counter).set(jarr2);
+                        //moving to next client
                         p__counter++;
                         numOfTasksPerClient[p__counter-1]++;
                         jarr2=[];
@@ -60,33 +56,41 @@ class Tboard extends React.Component{
                     }
             }
             firebase.database().ref('Tasks').child(p__counter).set(jarr2);
-             //inserting tasks inserted manually
-             //p__counter++;
-             
+             //inserting tasks to Tasks folder which were inserted earlier manually to TasksExtra folder
              let db_source=firebase.database().ref("TasksExtra");
              if(db_source)
-             {        
-               db_source.on("value",function(snapshot){
+             { 
+               let numOfSons=0; //running variable on items in folder: TasksExtra   
+               db_source.on("value",function (snapshot){
                    //console.log(snapshot.child("1").val());
-                   if(snapshot.child(numOfSons)!==null && snapshot.child(numOfSons).val()!==null)
+                   while(snapshot.child(numOfSons)!==null && snapshot.child(numOfSons).val()!==null)
                    {
-                    //console.log(snapshot.child(numOfSons).val());
                     let currentid=snapshot.child(numOfSons).val().userId;
-                    firebase.database().ref('Tasks').child(currentid).child(parseInt(numOfTasksPerClient[numOfSons])).set(snapshot.child(numOfSons).val()); 
-                    numOfTasksPerClient[numOfSons]++;
-                    numOfSons++
+                    firebase.database().ref('Tasks').child(currentid).child(parseInt(numOfTasksPerClient[currentid-1])).set(snapshot.child(numOfSons).val()); 
+                    numOfTasksPerClient[currentid-1]++;
+                    //console.log("next folder of user "+currentid+" is: "+numOfTasksPerClient[numOfSons]);
+                    //console.log("task array is: "+numOfTasksPerClient);
+                    numOfSons++;
                    }
-               })
-                       
-                 }
+                   
+               })           
+            }//of if
                 
-           })  
+           })      
     }
 
+    updateFinish=async()=>{
+        let fini=this.props.fini;
+        console.log("tasks finished? "+fini);
+        await this.props.updateFinishTasks(); 
+        this.setState({"finishedTasks":!this.state.finishedTasks});       
+    }
+
+  
 
     render(){
         let thetasks=this.state.all_tasks;
-        let tarr=[];
+        let tarr=[]; //array will contain specific client tasks according to given id
         for(var i=0; i<thetasks.length; i++)
         {
             if(thetasks[i].userId===parseInt(this.state.c_id))
@@ -107,7 +111,5 @@ class Tboard extends React.Component{
         );
     }
 }
-/*
-const mapStateToProps=state=>state
-export default connect(mapStateToProps)(Tboard);*/
+
 export default (Tboard);

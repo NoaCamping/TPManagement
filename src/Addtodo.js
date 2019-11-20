@@ -9,33 +9,25 @@ class Addtodo extends React.Component{
         //this.state={"title":"","userid":"", "tc":"", "missionid":""}
     }
    
+    //function saves the new task given by user to DB 
     addNewMission=async(e)=>{
         
         let newTitle=document.getElementsByName("title")[0].value;
         let userid=this.props.c_id;
-        let tc=this.props.task_counter;
-        let missionid=this.props.numOfTasksPerClient[userid-1];
-        //console.log(this.props.numOfTasksPerClient);
-        //console.log("the mission id : "+missionid); 
-        firebase.database().ref("TasksExtra").child(tc).set(
+        //number of new task for client number "userid"
+        let newTaskNumber=this.props.numOfTasksPerClient[parseInt(userid)-1];
+        firebase.database().ref("TasksExtra").child(newTaskNumber).set(
                 {
                     title: newTitle,
                     completed: false,
                     userId: userid,
-                    id: missionid
+                    id: newTaskNumber
                  }
             )
-        //updating number of added tasks for each client
-        //temp_added_tasks[userid-1]++;
-        
-        //console.log("temp_added_tasks: "+this.props.numOfTasksPerClient);
-        //console.log("task counter is: "+this.props.task_counter);
-        this.props.addOnePerClients(userid-1);
-        await this.props.addOne(e);    
-        
+        //updating number of added tasks in DB for each client
+        await this.props.addOnePerClients(userid-1);   
         //closing the textbox
         await this.props.closeAddTodo(e);   
-       
     }
   
     render(){

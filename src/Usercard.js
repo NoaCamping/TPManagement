@@ -2,7 +2,6 @@ import React from 'react';
 import './Usercard.css';
 import Activeside from './Activeside';
 import {firebase} from './firebase/firebase';
-import {connect} from "react-redux";
 
 class Usercard extends React.Component{
 
@@ -20,7 +19,7 @@ class Usercard extends React.Component{
             "deleted_pressed":false,
             "background_changed":"white",
             "whoneedscolor":"",
-            "task_counter":0
+            "task_rerender":false
         }
         
                     
@@ -77,6 +76,7 @@ class Usercard extends React.Component{
           alert('record was deleted');
            }
         
+        //function changes background color when user clicks on text-box   
         background_change=(e)=>{
             var needColor=e.target.value;  //number of client that was clicked
             this.setState(()=>{return{"whoneedscolor": needColor}});
@@ -84,33 +84,19 @@ class Usercard extends React.Component{
             if(this.state.background_changed==="white")
             {
                 this.setState({background_changed: "pink"});
-                this.updateId(needColor);
-                
             }       
             else if(this.state.background_changed==="pink")
             {
-                this.setState({background_changed: "white"});
-                
+                this.setState({background_changed: "white"});  
             }       
         }
 
-        updateId=(c_id)=>{
-            
-            this.props.dispatch({type: "UPDATEID",
-            currentCardId: c_id});
-            //alert("id was updated with: "+c_id);
-        };
-
-        /*addTC=()=>{
-            let temp=this.state.task_counter;
-            temp=parseInt(temp+1);
-            //console.log("number of folder: "+temp);
-            this.setState(()=>{return{"task_counter": temp}})
-        }*/
-        updateTaskCounter=(savedVal)=>{
-                this.setState({"task_counter": savedVal});
+        //function updates status-whether new task which wanted to be added had finished saving process
+        updateFinishTasks=()=>{
+            let task_st=this.state.task_rerender;
+            this.setState({"task_rerender": !task_st});
         }
-        
+       
     render(){
         
         
@@ -129,10 +115,10 @@ class Usercard extends React.Component{
                                       onClick={this.background_change} className="no_border" />
 
                                     </div>
-                                    { this.state.background_changed==="pink"?
+                        {this.state.background_changed==="pink"?
                                         <div id="class_visible_popup">
                                                 <Activeside c_id={this.state.whoneedscolor} e_number={this.state.numofemployees}
-                                                updateTaskCounter={this.updateTaskCounter} tc={this.state.task_counter}/>
+                                                updateFinishTasks={this.updateFinishTasks} fini={this.state.task_rerender}/>
                                         </div>
                                        :
                                        null
@@ -148,7 +134,6 @@ class Usercard extends React.Component{
                                         <input type="button" value="Other Data" className="other_data"
                                         ref="other_data" id={employee.id}
                                         onMouseEnter={this.mousehovering}
-                                        //onMouseLeave={this.mousehovering}
                                         onClick={this.mousefinishedhovering}
                                         />
                                         &nbsp; &nbsp; &nbsp;
@@ -179,5 +164,5 @@ class Usercard extends React.Component{
         );
     }
 }
-const mapStateToProps=state=>state
-export default connect(mapStateToProps)(Usercard);
+
+export default Usercard;
