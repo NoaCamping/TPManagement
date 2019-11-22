@@ -12,8 +12,7 @@ class Tboard extends React.Component{
         this.state={
             "e_number":this.props.numOfE,
             "all_tasks":[],
-            "c_id": this.props.given_id
-            
+            "c_id": this.props.given_id 
         }
     }
 

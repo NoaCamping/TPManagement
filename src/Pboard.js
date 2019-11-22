@@ -18,7 +18,7 @@ class Pboard extends React.Component{
     async componentDidMount(){
 
         //Posts  - arranging DB according to userId number
-        let jarr=[];
+        let jarr=[]; //temporary array to save posts which belong to specific user
         let user_number=1;
         //console.log("number id is: "+this.props.given_id)
             await axios.get(`https://jsonplaceholder.typicode.com/posts`)
@@ -26,26 +26,47 @@ class Pboard extends React.Component{
                 const postbox=resp.data;
                 this.setState({"all_posts": postbox});
                 //deleting old information from DB in case DB is not empty
-            firebase.database().ref('Posts').remove();    
+                firebase.database().ref('Posts').remove();    
                 //inserting data 
+                let numOfPostsPerClient=new Array(10).fill(0);
+            
                 for(let item of postbox)
                 {  
                     if(item.userId===user_number)
                     {
                         jarr.push(item);
+                        //counting how many posts on site for specific client
+                        numOfPostsPerClient[user_number-1]++;
                     }
                     else{
                         firebase.database().ref('Posts').child(user_number).set(jarr);
-                        jarr=[];
                         user_number++;
+                        numOfPostsPerClient[user_number-1]++;
+                        jarr=[];
                         jarr.push(item); 
                     }       
                     
                 }
                 firebase.database().ref('Posts').child(user_number).set(jarr);
+                 //inserting tasks to Tasks folder which were inserted earlier manually to TasksExtra folder
+                let db_source=firebase.database().ref("PostsExtra");
+                if(db_source)
+                { 
+                    let numOfSons=0; //running variable on items in folder: PostsExtra   
+                    db_source.on("value",function (snapshot){
+                        //console.log(snapshot.child("1").val());
+                        while(snapshot.child(numOfSons)!==null && snapshot.child(numOfSons).val()!==null)
+                        {
+                            let currentid=snapshot.child(numOfSons).val().userId;
+                            firebase.database().ref('Posts').child(currentid).child(parseInt(numOfPostsPerClient[currentid-1])).set(snapshot.child(numOfSons).val()); 
+                            numOfPostsPerClient[currentid-1]++;
+                            //console.log("post array is: "+numOfPostsPerClient);
+                            numOfSons++;
+                        }
+                    })           
+                }//of if
                }) 
-            
-       
+             
     }
 
     render(){
@@ -73,7 +94,5 @@ class Pboard extends React.Component{
         );
     }
 }
-//const mapStateToProps=state=>state
 
-//export default connect(mapStateToProps)(Pboard);
 export default(Pboard);

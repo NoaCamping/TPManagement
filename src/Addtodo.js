@@ -6,7 +6,6 @@ class Addtodo extends React.Component{
     constructor(props){
         super(props);
 
-        //this.state={"title":"","userid":"", "tc":"", "missionid":""}
     }
    
     //function saves the new task given by user to DB 
