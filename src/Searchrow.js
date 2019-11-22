@@ -17,12 +17,12 @@ class Searchrow extends React.Component{
             "numofemployees":0,
             "filtered_data":[],
             "search_was_done": false,
-            "add_user_screen_on": false
-            
+            "add_user_screen_on": false,
+            "client_was_deleted": false
         }
         
     }
-    
+
     componentDidMount(){
         this.uploadEmployees();
     }
@@ -49,27 +49,47 @@ class Searchrow extends React.Component{
             this.setState({numofemployees: counter-1});
             
            })
-              
-           //updated completed tasks situation for each client
-           await axios.get('https://jsonplaceholder.typicode.com/todos')
-            .then(resp=>{
-                
-                for(var i=0; i<resp.data.length; i++)
-                    {
-                        for(let j=0; j<task_arr.length; j++)
-                        {
-                                
-                                if(resp.data[i].completed===false && resp.data[i].userId===(j+1))
-                                    task_arr[j]=false;
-                        } 
-                    }
-                    this.setState({completed_tasks: task_arr});            
-           });
+         if(this.state.client_was_deleted===false)     
+                this.tasksFromSite(task_arr);
+         else
+         {
+            //console.log("client was delete and we update");
+            this.tasksAfterDeletion(task_arr);
+         }
+               
     }
 
     search_word=()=>{
         this.search_db();
         
+    }
+    //updating tasks from site with no deletion
+    tasksFromSite=async(task_arr)=>{
+        //updated completed tasks situation for each client
+        await axios.get('https://jsonplaceholder.typicode.com/todos')
+        .then(resp=>{
+            
+            for(var i=0; i<resp.data.length; i++)
+                {
+                    for(let j=0; j<task_arr.length; j++)
+                    {
+                            
+                            if(resp.data[i].completed===false && resp.data[i].userId===(j+1))
+                                task_arr[j]=false;
+                    } 
+                }
+                this.setState({completed_tasks: task_arr});            
+       });
+    }
+
+    //updating tasks from site and including deletion
+    tasksAfterDeletion=async(task_arr)=>{
+        console.log("deletion process");
+        var ref=firebase.database().child("Tasks").on("value",function(snapshot){
+            console.log(snapshot.val());
+            task_arr.push(snapshot.val());
+        })
+        this.setState({completed_tasks: task_arr});
     }
 
     //function searches clients who have a specific sub-string in their full name or email
@@ -127,6 +147,13 @@ class Searchrow extends React.Component{
 
     }
  
+    //function in order to update tasks due to deletion of client from database
+    need_update_tasks=()=>{
+        let status_d=this.state.client_was_deleted;
+        this.setState(()=>{return{"client_was_deleted": !status_d}});
+        //console.log("arrived at searchRow class  need_update_tasks");
+    }
+
     render(){
         
         return(
@@ -146,6 +173,8 @@ class Searchrow extends React.Component{
                     completed_tasks={this.state.completed_tasks}
                     numofemployees={this.state.numofemployees}
                     search_was_done={this.state.search_was_done}
+                    need_update_tasks={this.need_update_tasks}
+                    client_was_deleted={this.state.client_was_deleted}
                     />
             </div>
             

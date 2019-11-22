@@ -12,19 +12,12 @@ class Tboard extends React.Component{
         this.state={
             "e_number":this.props.numOfE,
             "all_tasks":[],
-            "c_id": this.props.given_id,
-            "finishedTasks":false
+            "c_id": this.props.given_id
             
         }
     }
 
     async componentDidMount(){
-
-        //number of employees
-        /*await axios.get('https://jsonplaceholder.typicode.com/users')
-        .then(resp=>{
-            this.setState({e_number: resp.data.length});
-        });*/
         //Posts  - arranging DB according to userId number
         let p__counter=1;
         await axios.get('https://jsonplaceholder.typicode.com/todos')
@@ -68,7 +61,6 @@ class Tboard extends React.Component{
                     let currentid=snapshot.child(numOfSons).val().userId;
                     firebase.database().ref('Tasks').child(currentid).child(parseInt(numOfTasksPerClient[currentid-1])).set(snapshot.child(numOfSons).val()); 
                     numOfTasksPerClient[currentid-1]++;
-                    //console.log("next folder of user "+currentid+" is: "+numOfTasksPerClient[numOfSons]);
                     //console.log("task array is: "+numOfTasksPerClient);
                     numOfSons++;
                    }
@@ -78,15 +70,6 @@ class Tboard extends React.Component{
                 
            })      
     }
-
-    updateFinish=async()=>{
-        let fini=this.props.fini;
-        console.log("tasks finished? "+fini);
-        await this.props.updateFinishTasks(); 
-        this.setState({"finishedTasks":!this.state.finishedTasks});       
-    }
-
-  
 
     render(){
         let thetasks=this.state.all_tasks;

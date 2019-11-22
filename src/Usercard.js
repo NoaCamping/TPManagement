@@ -21,8 +21,7 @@ class Usercard extends React.Component{
             "whoneedscolor":"",
             "task_rerender":false
         }
-        
-                    
+                     
     }
 
     UNSAFE_componentWillReceiveProps(){
@@ -39,7 +38,8 @@ class Usercard extends React.Component{
             "numofemployees":this.props.numofemployees,
             "search_was_done": this.props.search_was_done,
             "hover":hoverAll
-                })                      
+                }) 
+                                   
       }
 
       mousehovering=(e)=>{
@@ -61,19 +61,21 @@ class Usercard extends React.Component{
       updateEmployee=(e)=>{
         e.preventDefault();
         var userid=e.target.id;
-        firebase.database().ref('A/'+userid).update({
+        //console.log("employee id: "+e.target.id+" its name is: "+e.target.name);
+        /*firebase.database().ref('A/'+userid).update({
             name: document.getElementById("name_input").value,
             email: document.getElementById("email_input").value
-        });
+        });*/
           alert("employee with id number: "+userid+" was updated");
       }
 
-      deleteEmployee(e){
+      deleteEmployee=(e)=>{
           e.preventDefault();
           var userid=e.target.id;
-          firebase.database().ref('A/'+userid).set(null);
+          //firebase.database().ref('A/'+userid).set(null);
+          firebase.database().ref('A/'+userid).remove();
           console.log("employee with id number: "+userid+" was deleted from database");
-          alert('record was deleted');
+          this.updateTasksScreen(e);
            }
         
         //function changes background color when user clicks on text-box   
@@ -93,8 +95,15 @@ class Usercard extends React.Component{
 
         //function updates status-whether new task which wanted to be added had finished saving process
         updateFinishTasks=()=>{
-            let task_st=this.state.task_rerender;
-            this.setState({"task_rerender": !task_st});
+            /*let task_st=this.state.task_rerender;
+            this.setState({"task_rerender": !task_st});*/      
+        }
+
+        //function to update deletion of client from DB
+        updateTasksScreen=async(e)=>{
+            await this.props.need_update_tasks(e);
+            //console.log("i arrived at: updateTasksScreen");
+            console.log(this.props.client_was_deleted);
         }
        
     render(){
@@ -102,7 +111,7 @@ class Usercard extends React.Component{
         
         return( 
                      <div id="withoutsearch">
-                        {/*"filters results are: "+this.state.filters_result*/}    
+                            
                         {this.state.employees.map((employee,index)=>
                         <div className="card_body" key={index} >
                             <div className={this.state.completed_tasks[employee.id]?"class_green":"class_red"}

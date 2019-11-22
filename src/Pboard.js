@@ -15,18 +15,7 @@ class Pboard extends React.Component{
         }
     }
 
-    /*UNSAFE_componentWillReceiveProps=async()=>{
-        //await this.setState({c_id: this.props.currentCardId})
-        //await this.setState({c_id: this.props.given_id})
-        console.log("props given was: "+this.props.given_id)
-    }*/
-
     async componentDidMount(){
-        //number of employees
-        /*await axios.get(`https://jsonplaceholder.typicode.com/users`)
-        .then(resp=>{
-            this.setState({e_number: resp.data.length});
-        });*/
 
         //Posts  - arranging DB according to userId number
         let jarr=[];
