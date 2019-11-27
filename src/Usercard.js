@@ -19,12 +19,16 @@ class Usercard extends React.Component{
             "deleted_pressed":false,
             "background_changed":"white",
             "whoneedscolor":"",
-            "task_rerender":false
+            "task_rerender":false,
+            "currentName":"",
+            "currentEmail":""
         }
                      
     }
 
     UNSAFE_componentWillReceiveProps(){
+        //calculating how many employees in DB
+        
         let hoverAll=[false];
         for(var i=1; i<=this.props.employees.length; i++)
         {
@@ -33,9 +37,9 @@ class Usercard extends React.Component{
         
         this.setState({
             "filters_result":this.props.filteredpeople,
-            "employees":this.props.employees, 
+            "employees":this.props.employees,
             "completed_tasks":this.props.completed_tasks,
-            "numofemployees":this.props.numofemployees,
+            "numofemployees":this.props.employees.length,
             "search_was_done": this.props.search_was_done,
             "hover":hoverAll
                 }) 
@@ -61,11 +65,11 @@ class Usercard extends React.Component{
       updateEmployee=(e)=>{
         e.preventDefault();
         var userid=e.target.id;
-        //console.log("employee id: "+e.target.id+" its name is: "+e.target.name);
-        /*firebase.database().ref('A/'+userid).update({
-            name: document.getElementById("name_input").value,
-            email: document.getElementById("email_input").value
-        });*/
+        //console.log("employee id: "+e.target.id+" its name is: "+document.getElementById("name_input").value);
+        firebase.database().ref('A/'+userid).update({
+            name: this.state.currentName,
+            email: this.state.currentEmail
+        });
           alert("employee with id number: "+userid+" was updated");
       }
 
@@ -106,6 +110,16 @@ class Usercard extends React.Component{
             console.log(this.props.client_was_deleted);
         }
        
+        //function saves name of client that was changed - in order to preform future update
+        getName=(e)=>{
+            //console.log("name of client is: "+e.target.value);
+            this.setState({"currentName": e.target.value});
+        }
+        //function saves client's email address that was changed - in order to preform future update
+        getEmail=(e)=>{
+            //console.log("client's email address is: "+e.target.value);
+            this.setState({"currentEmail": e.target.value});
+        }
     render(){
         
         
@@ -113,7 +127,7 @@ class Usercard extends React.Component{
                      <div id="withoutsearch">
                             
                         {this.state.employees.map((employee,index)=>
-                        <div className="card_body" key={index} >
+                        <div className="card_body" key={employee.id} >
                             <div className={this.state.completed_tasks[employee.id]?"class_green":"class_red"}
                             id={!this.state.search_was_done?"class_visible":this.state.filters_result.includes(JSON.stringify(employee.id))
                             ?"class_visible":"class_hide"}
@@ -135,8 +149,8 @@ class Usercard extends React.Component{
                                         }
 
                                     <div className="details">
-                                        Name: <input type="text" defaultValue={employee.name} id="name_input"/> 
-                                        Email: <input type="text" defaultValue={employee.email} id="email_input"/>
+                                        Name: <input type="text" defaultValue={employee.name} id="name_input" onChange={this.getName}/> 
+                                        Email: <input type="text" defaultValue={employee.email} id="email_input" onChange={this.getEmail}/>
                                     </div>
                
                                     <div className="btns">

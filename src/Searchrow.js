@@ -49,13 +49,15 @@ class Searchrow extends React.Component{
             this.setState({numofemployees: counter-1});
             
            })
-         if(this.state.client_was_deleted===false)     
+                
+           //updating tasks
+            if(this.state.client_was_deleted===false)     
                 this.tasksFromSite(task_arr);
-         else
-         {
-            //console.log("client was delete and we update");
-            this.tasksAfterDeletion(task_arr);
-         }
+            else
+            {
+                //console.log("client was delete and we update");
+                this.tasksAfterDeletion(task_arr);
+            }
                
     }
 
@@ -128,6 +130,7 @@ class Searchrow extends React.Component{
         
     }
 
+    //function updates clients who were inserted manually
     updateManuallyAddedClients=()=>{
         let ref=firebase.database().ref('ManuallyInsertedClients');
         let wholeclients=this.state.employees;
@@ -137,7 +140,12 @@ class Searchrow extends React.Component{
             let thename=firebase.database().ref('A').child(counter1).name;
             let theemail=firebase.database().ref('A').child(counter1).email;
             if(thename!==ad_client.name && theemail!==ad_client.email)
-                    firebase.database().ref('A').child(counter1+1).set(ad_client);
+            {
+                firebase.database().ref('A').child(counter1+1).set(ad_client);
+                //updating temp folders in DB for future use
+                firebase.database().ref('PostsManually').child(counter1+1).set({"userId": counter1+1});
+                firebase.database().ref('TasksManually').child(counter1+1).set({"userId": counter1+1});
+            }
             counter1++;
             if(wholeclients[wholeclients.length-1].name!==ad_client.name && wholeclients[wholeclients.length-1].email!==ad_client.email)
                     wholeclients.push(ad_client);  
