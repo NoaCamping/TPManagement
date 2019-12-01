@@ -18,14 +18,24 @@ class Searchrow extends React.Component{
             "filtered_data":[],
             "search_was_done": false,
             "add_user_screen_on": false,
-            "client_was_deleted": false
+            "client_was_deleted": false,
+            "zero_deletions_from_DB": true
         }
         
     }
-
+  
     componentDidMount(){
-        this.uploadEmployees();
+        if(this.state.zero_deletions_from_DB===true)  //no client was deleted from DB
+            this.uploadEmployees();
+        else
+        {
+            console.log("searchrow zero deletion is false");
+            this.uploadEmployeesAfterDeletion(); //at least one client was deleted from DB
+        }
+     
     }
+
+    //function loads employees from external site
     async uploadEmployees(){
         //let currentstate=this;
         let task_arr=[];
@@ -44,12 +54,9 @@ class Searchrow extends React.Component{
                     counter++;
                     task_arr.push("true");  
             }
-           
-            this.setState({employees: people});
-            this.setState({numofemployees: counter-1});
-            
+            this.setState({employees: people, numofemployees: counter-1});
            })
-                
+            /*    
            //updating tasks
             if(this.state.client_was_deleted===false)     
                 this.tasksFromSite(task_arr);
@@ -57,9 +64,20 @@ class Searchrow extends React.Component{
             {
                 //console.log("client was delete and we update");
                 this.tasksAfterDeletion(task_arr);
-            }
+            }*/
                
     }
+     //function loads employees after at least 1 deletion has occured
+     uploadEmployeesAfterDeletion()
+     {
+        //updating clients to be - clients in firebase DB after deletion had already occured
+        let uPeople=[]
+        firebase.database().ref('A').on("value",function(snapshot){
+            uPeople.push(snapshot.val());
+            console.log("added after deletion : "+snapshot.val());
+        })
+        this.setState({employees: uPeople});
+     }
 
     search_word=()=>{
         this.search_db();
@@ -84,6 +102,7 @@ class Searchrow extends React.Component{
        });
     }
 
+   
     //updating tasks from site and including deletion
     tasksAfterDeletion=async(task_arr)=>{
         console.log("deletion process");
@@ -124,10 +143,14 @@ class Searchrow extends React.Component{
         
     }
 
+    //function opens the input screen for a new client to be added
     add_user=()=>{
+        this.setState((prevState)=>{return {"add_user_screen_on": !prevState.add_user_screen_on}});   
+    }
+    //function closes the screen of receiving new user and update data from ManuallyAdded table to Users table in DB
+    closeBoxOfNewUser=()=>{
         this.setState((prevState)=>{return {"add_user_screen_on": !prevState.add_user_screen_on}});
         this.updateManuallyAddedClients();
-        
     }
 
     //function updates clients who were inserted manually
@@ -155,15 +178,16 @@ class Searchrow extends React.Component{
 
     }
  
-    //function in order to update tasks due to deletion of client from database
-    need_update_tasks=()=>{
+    //function in order to update clients on screen due to deletion of client from database
+    //deletion in database already occurred
+    need_update_clients=()=>{
         let status_d=this.state.client_was_deleted;
-        this.setState(()=>{return{"client_was_deleted": !status_d}});
-        //console.log("arrived at searchRow class  need_update_tasks");
+        this.setState({"client_was_deleted": !status_d, zero_deletions_from_DB: false});
+        //console.log("arrived at searchRow class  client was deleted is true, 0 deletions should be false");
     }
-
+  
     render(){
-        
+
         return(
             <div>
                     <div id="row_position">
@@ -173,7 +197,7 @@ class Searchrow extends React.Component{
                     <div className="add_mission"
                     id={this.state.add_user_screen_on?"see_card":"hide_card"}
                     >
-                        <Adduser closeBox={this.add_user}/>
+                        <Adduser closeBox={this.closeBoxOfNewUser}/>
                     </div>
                     <Usercard 
                     filteredpeople={this.state.filtered_data}
@@ -181,7 +205,7 @@ class Searchrow extends React.Component{
                     completed_tasks={this.state.completed_tasks}
                     numofemployees={this.state.numofemployees}
                     search_was_done={this.state.search_was_done}
-                    need_update_tasks={this.need_update_tasks}
+                    need_update_clients={this.need_update_clients}
                     client_was_deleted={this.state.client_was_deleted}
                     />
             </div>

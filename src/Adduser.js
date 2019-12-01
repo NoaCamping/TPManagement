@@ -9,6 +9,9 @@ class Adduser extends React.Component{
         this.state={"e_number":0}
     }
 
+    componentDidMount=()=>{
+        this.countNumberOfEmployees();
+    }
     Closecard=(e)=>{
         //deleting data from form boxes
         document.getElementById("username").value="";
@@ -28,18 +31,19 @@ class Adduser extends React.Component{
         }
         else
         {
-        //updating user in firebase DB
-        //number of employees
-        await this.countNumberOfEmployees(); 
+        //updating user in firebase DB 
+        //counting number of employees and updating it in state
+        await this.countNumberOfEmployees();
         let numOfId=this.state.e_number+1;      
         firebase.database().ref('ManuallyInsertedClients').child(numOfId).set({"id":numOfId,"name": u_name, "email": u_email,
         "address":{
             "street":"", "city":"","zipcode":""}
         });
+        //console.log(u_name+" is client with id: "+numOfId);
+        this.setState({e_number: parseInt(numOfId)+1});
        //deleting text boxes for future clients  
         document.getElementById("useremail").value="";
         document.getElementById("username").value="";
-        
         //closing the box of add_user
         this.props.closeBox(e);
         }
@@ -49,12 +53,26 @@ class Adduser extends React.Component{
         let regexStructure = /\S+@\S+\.\S+/;
         return regexStructure.test(email);
         }
-    countNumberOfEmployees=async()=>{
-        await axios.get('https://jsonplaceholder.typicode.com/users')
-        .then(resp=>{
-                this.setState(()=>{return {e_number: resp.data.length}});
+
+    countNumberOfEmployees=()=>{
+           let empCounter=0;
+           firebase.database().ref('A').on("value",function(snapshot){
+            //snapshot.val() will be an object containing all users
+            var returnArr=[];
+
+            snapshot.forEach(function(childSnapshot){
+                var item=childSnapshot.val();
+                item.key=childSnapshot.key;
+                returnArr.push(item);
             });
+                empCounter=returnArr.length;
+                   
+           });
+           //console.log("number of employees is: "+empCounter);  
+           this.setState(()=>{return{e_number: empCounter}});  
     }
+        
+    
     render(){
         return(
             <div>

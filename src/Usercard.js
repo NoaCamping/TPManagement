@@ -10,11 +10,11 @@ class Usercard extends React.Component{
 
      
         this.state={
-            "filters_result":[],
-            "employees":[], 
-            "completed_tasks":[],
-            "numofemployees":0,
-            "search_was_done": false,
+            "filters_result":this.props.filteredpeople,
+            "employees":this.props.employees, 
+            "completed_tasks":this.props.completed_tasks,
+            "numofemployees":this.props.numofemployees,
+            "search_was_done": this.props.search_was_done,
             "hover":[],
             "deleted_pressed":false,
             "background_changed":"white",
@@ -27,23 +27,13 @@ class Usercard extends React.Component{
     }
 
     UNSAFE_componentWillReceiveProps(){
-        //calculating how many employees in DB
-        
+        //initializing array for hover operation
         let hoverAll=[false];
         for(var i=1; i<=this.props.employees.length; i++)
         {
             hoverAll.push(false);
         }
-        
-        this.setState({
-            "filters_result":this.props.filteredpeople,
-            "employees":this.props.employees,
-            "completed_tasks":this.props.completed_tasks,
-            "numofemployees":this.props.employees.length,
-            "search_was_done": this.props.search_was_done,
-            "hover":hoverAll
-                }) 
-                                   
+        this.setState({"hover":hoverAll})                             
       }
 
       mousehovering=(e)=>{
@@ -79,7 +69,7 @@ class Usercard extends React.Component{
           //firebase.database().ref('A/'+userid).set(null);
           firebase.database().ref('A/'+userid).remove();
           console.log("employee with id number: "+userid+" was deleted from database");
-          this.updateTasksScreen(e);
+          this.updateClientsScreen(e);
            }
         
         //function changes background color when user clicks on text-box   
@@ -104,10 +94,9 @@ class Usercard extends React.Component{
         }
 
         //function to update deletion of client from DB
-        updateTasksScreen=async(e)=>{
-            await this.props.need_update_tasks(e);
-            //console.log("i arrived at: updateTasksScreen");
-            console.log(this.props.client_was_deleted);
+        updateClientsScreen=async(e)=>{
+            await this.props.need_update_clients(e);
+            //console.log("i arrived at: updateClientsScreen");
         }
        
         //function saves name of client that was changed - in order to preform future update
@@ -120,14 +109,12 @@ class Usercard extends React.Component{
             //console.log("client's email address is: "+e.target.value);
             this.setState({"currentEmail": e.target.value});
         }
-    render(){
-        
-        
+    render(){ 
+             
         return( 
-                     <div id="withoutsearch">
-                            
-                        {this.state.employees.map((employee,index)=>
-                        <div className="card_body" key={employee.id} >
+                     <div id="withoutsearch"> 
+                        {this.props.employees.map((employee,index)=>
+                        <div className="card_body" key={index} >
                             <div className={this.state.completed_tasks[employee.id]?"class_green":"class_red"}
                             id={!this.state.search_was_done?"class_visible":this.state.filters_result.includes(JSON.stringify(employee.id))
                             ?"class_visible":"class_hide"}
