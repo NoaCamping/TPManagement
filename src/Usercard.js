@@ -11,8 +11,8 @@ class Usercard extends React.Component{
      
         this.state={
             "filters_result":this.props.filteredpeople,
-            "employees":this.props.employees, 
             "completed_tasks":this.props.completed_tasks,
+            "the_employees": this.props.employees,
             "numofemployees":this.props.numofemployees,
             "search_was_done": this.props.search_was_done,
             "hover":[],
@@ -25,7 +25,9 @@ class Usercard extends React.Component{
         }
                      
     }
-
+    componentDidMount=()=>{
+        this.setState({"the_employees": this.props.employees})   
+    }
     UNSAFE_componentWillReceiveProps(){
         //initializing array for hover operation
         let hoverAll=[false];
@@ -33,7 +35,7 @@ class Usercard extends React.Component{
         {
             hoverAll.push(false);
         }
-        this.setState({"hover":hoverAll})                             
+        this.setState({"hover":hoverAll, "the_employees": this.props.employees})                             
       }
 
       mousehovering=(e)=>{
@@ -63,13 +65,15 @@ class Usercard extends React.Component{
           alert("employee with id number: "+userid+" was updated");
       }
 
+      //function deletes current employee from DB and refreshed screen
       deleteEmployee=(e)=>{
           e.preventDefault();
           var userid=e.target.id;
           //firebase.database().ref('A/'+userid).set(null);
           firebase.database().ref('A/'+userid).remove();
           console.log("employee with id number: "+userid+" was deleted from database");
-          this.updateClientsScreen(e);
+          //refreshing screen
+          this.updateClientsScreen(userid);
            }
         
         //function changes background color when user clicks on text-box   
@@ -93,10 +97,16 @@ class Usercard extends React.Component{
             this.setState({"task_rerender": !task_st});*/      
         }
 
-        //function to update deletion of client from DB
-        updateClientsScreen=async(e)=>{
-            await this.props.need_update_clients(e);
-            //console.log("i arrived at: updateClientsScreen");
+        //function refreshes screen in case a employee was removed from DB
+        updateClientsScreen=(userid)=>{
+            let currentEmps=this.state.the_employees;
+            for(let i=0; i<currentEmps.length; i++)
+            {
+                if(parseInt(userid)===parseInt(currentEmps[i].id))
+                    currentEmps.splice(i,1);
+            }
+            //console.log(currentEmps);
+            this.setState({"the_employees": currentEmps});
         }
        
         //function saves name of client that was changed - in order to preform future update
@@ -113,7 +123,7 @@ class Usercard extends React.Component{
              
         return( 
                      <div id="withoutsearch"> 
-                        {this.props.employees.map((employee,index)=>
+                        {this.state.the_employees.map((employee,index)=>
                         <div className="card_body" key={index} >
                             <div className={this.state.completed_tasks[employee.id]?"class_green":"class_red"}
                             id={!this.state.search_was_done?"class_visible":this.state.filters_result.includes(JSON.stringify(employee.id))

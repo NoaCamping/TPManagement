@@ -18,21 +18,24 @@ class Searchrow extends React.Component{
             "filtered_data":[],
             "search_was_done": false,
             "add_user_screen_on": false,
-            "client_was_deleted": false,
             "zero_deletions_from_DB": true
         }
         
     }
-  
+   componentWillMount=()=>{
+    this.uploadEmployees();
+   }
     componentDidMount(){
-        if(this.state.zero_deletions_from_DB===true)  //no client was deleted from DB
-            this.uploadEmployees();
-        else
+        if(this.state.zero_deletions_from_DB===false)
         {
             console.log("searchrow zero deletion is false");
             this.uploadEmployeesAfterDeletion(); //at least one client was deleted from DB
         }
-     
+        else
+        {
+            //no client was deleted from DB
+            this.uploadEmployees();
+        }
     }
 
     //function loads employees from external site
@@ -177,14 +180,6 @@ class Searchrow extends React.Component{
         this.setState(()=>{return {"numofemployees": counter1, "employees":wholeclients}})
 
     }
- 
-    //function in order to update clients on screen due to deletion of client from database
-    //deletion in database already occurred
-    need_update_clients=()=>{
-        let status_d=this.state.client_was_deleted;
-        this.setState({"client_was_deleted": !status_d, zero_deletions_from_DB: false});
-        //console.log("arrived at searchRow class  client was deleted is true, 0 deletions should be false");
-    }
   
     render(){
 
@@ -205,12 +200,9 @@ class Searchrow extends React.Component{
                     completed_tasks={this.state.completed_tasks}
                     numofemployees={this.state.numofemployees}
                     search_was_done={this.state.search_was_done}
-                    need_update_clients={this.need_update_clients}
-                    client_was_deleted={this.state.client_was_deleted}
+                    
                     />
-            </div>
-            
-            
+            </div>                
         );
     }
 }
