@@ -12,7 +12,8 @@ class Tboard extends React.Component{
         this.state={
             "e_number":this.props.numOfE,
             "all_tasks":[],
-            "c_id": this.props.given_id 
+            "c_id": this.props.given_id
+            
         }
     }
 
@@ -49,7 +50,7 @@ class Tboard extends React.Component{
             }
             firebase.database().ref('Tasks').child(p__counter).set(jarr2);
              //inserting tasks to Tasks folder which were inserted earlier manually to TasksExtra folder
-             let db_source=firebase.database().ref("TasksExtra");
+            let db_source=firebase.database().ref("TasksExtra");
              if(db_source)
              { 
                let numOfSons=0; //running variable on items in folder: TasksExtra   
@@ -66,6 +67,7 @@ class Tboard extends React.Component{
                    
                })           
             }//of if
+             
                 
            })      
     }

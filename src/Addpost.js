@@ -24,7 +24,7 @@ class Addpost extends React.Component{
                  }
             )
         //updating number of added posts in DB for each client
-        await this.props.addOnePerClients(userid-1);   
+         
         //closing the post-textbox
         await this.props.closeAddPost(e);   
     }

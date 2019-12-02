@@ -13,20 +13,19 @@ class Usercard extends React.Component{
             "filters_result":this.props.filteredpeople,
             "completed_tasks":this.props.completed_tasks,
             "the_employees": this.props.employees,
-            "numofemployees":this.props.numofemployees,
             "search_was_done": this.props.search_was_done,
             "hover":[],
             "deleted_pressed":false,
             "background_changed":"white",
             "whoneedscolor":"",
-            "task_rerender":false,
             "currentName":"",
-            "currentEmail":""
+            "currentEmail":"",
+            "extra_task_number":0
         }
                      
     }
     componentDidMount=()=>{
-        this.setState({"the_employees": this.props.employees})   
+        this.setState({"the_employees": this.props.employees});   
     }
     UNSAFE_componentWillReceiveProps(){
         //initializing array for hover operation
@@ -91,12 +90,6 @@ class Usercard extends React.Component{
             }       
         }
 
-        //function updates status-whether new task which wanted to be added had finished saving process
-        updateFinishTasks=()=>{
-            /*let task_st=this.state.task_rerender;
-            this.setState({"task_rerender": !task_st});*/      
-        }
-
         //function refreshes screen in case a employee was removed from DB
         updateClientsScreen=(userid)=>{
             let currentEmps=this.state.the_employees;
@@ -119,6 +112,11 @@ class Usercard extends React.Component{
             //console.log("client's email address is: "+e.target.value);
             this.setState({"currentEmail": e.target.value});
         }
+
+        addOneToExtraTasksCounter=()=>{
+            this.setState({"extra_task_number": parseInt(this.state.extra_task_number)+1});
+        }
+
     render(){ 
              
         return( 
@@ -137,8 +135,10 @@ class Usercard extends React.Component{
                                     </div>
                         {this.state.background_changed==="pink"?
                                         <div id="class_visible_popup">
-                                                <Activeside c_id={this.state.whoneedscolor} e_number={this.state.numofemployees}
-                                                updateFinishTasks={this.updateFinishTasks} fini={this.state.task_rerender}/>
+                                                <Activeside c_id={this.state.whoneedscolor}
+                                                e_t_num={this.state.extra_task_number}
+                                                addOneToExtraTasksCounter={this.addOneToExtraTasksCounter}
+                                                />
                                         </div>
                                        :
                                        null

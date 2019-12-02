@@ -198,7 +198,6 @@ class Searchrow extends React.Component{
                     filteredpeople={this.state.filtered_data}
                     employees={this.state.employees}
                     completed_tasks={this.state.completed_tasks}
-                    numofemployees={this.state.numofemployees}
                     search_was_done={this.state.search_was_done}
                     
                     />
