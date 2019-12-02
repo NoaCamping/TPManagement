@@ -5,7 +5,7 @@ import {firebase} from './firebase/firebase';
 class Addtodo extends React.Component{
     constructor(props){
         super(props);
-
+      this.state=({"task_loc":0})  
     }
    
     //function saves the new task given by user to DB 
@@ -15,32 +15,27 @@ class Addtodo extends React.Component{
         let userid=this.props.c_id;
         //number of new task for client number "userid"
         let newTaskNumber=this.props.extra_task_number
-        firebase.database().ref("TasksExtra").child(newTaskNumber).set(
+         /* *************************************************************************** */
+         //counting number of tasks in main folder tasks for specific user
+        //inserting the new task in specific place in main folder
+        let t_location=0;
+        firebase.database().ref('Tasks').child(userid).orderByKey().once("value")
+        .then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                t_location++;
+            })
+            console.log("t_loc is: "+t_location);
+            firebase.database().ref("TasksExtra").child(newTaskNumber).set(
                 {
                     title: newTitle,
                     completed: false,
                     userId: userid,
-                    id: newTaskNumber
+                    id: t_location+1
                  }
             )
-         
-        /* *************************************************************************** */
-        //counting number of tasks in main folder tasks for specific user
-        //inserting the new task in specific place in main folder
-        /*let t_location=0;
-        firebase.database().ref('Tasks').child(userid).child(t_location).orderByKey().once("value")
-        .then(function(snapshot){
-            snapshot.forEach(function(childSnapshot){
-                t_location++;})
-            console.log("t_loc is: "+t_location);
+            
         })
-    
-        firebase.database().ref('Tasks').child(userid).set({
-            title: newTitle,
-            completed: false,
-            userId: userid,
-            id: t_location
-        })*/
+        
         /* ************************************************************************** */
         //updating number of added tasks in DB for each client
         await this.props.addOneToExtraTasksCounter(); 

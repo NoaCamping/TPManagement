@@ -19,12 +19,13 @@ class Tboard extends React.Component{
 
     async componentDidMount(){
         //Posts  - arranging DB according to userId number
+        let all_tasks_ever;
         let p__counter=1;
         await axios.get('https://jsonplaceholder.typicode.com/todos')
         .then(resp=>{
             const taskbox=resp.data;
             this.setState({"all_tasks": taskbox});
-
+            all_tasks_ever=resp.data;
             //deleting old information from DB in case DB is not empty
             firebase.database().ref('Tasks').remove();
             //inserting data 
@@ -59,17 +60,21 @@ class Tboard extends React.Component{
                    while(snapshot.child(numOfSons)!==null && snapshot.child(numOfSons).val()!==null)
                    {
                     let currentid=snapshot.child(numOfSons).val().userId;
+                   
                     firebase.database().ref('Tasks').child(currentid).child(parseInt(numOfTasksPerClient[currentid-1])).set(snapshot.child(numOfSons).val()); 
                     numOfTasksPerClient[currentid-1]++;
                     //console.log("task array is: "+numOfTasksPerClient);
                     numOfSons++;
+                    all_tasks_ever.push(snapshot.child(numOfSons-1).val());
                    }
                    
                })           
             }//of if
-             
-                
-           })      
+                   
+           }) 
+           //updating all_tasks in state so it includes both automate and manually added tasks
+           //console.log(all_tasks_ever);
+           this.setState({"all_tasks": all_tasks_ever});
     }
 
     render(){
