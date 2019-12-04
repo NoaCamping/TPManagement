@@ -30,7 +30,7 @@ class Activeside extends React.Component{
     }
 
     //function updates whether todo-task button was pressed
-    newToDo=(e)=>{
+    newToDoBtnWasPressed=(e)=>{
         
         if(e.target.id==="add_todos")
             this.setState(prevState=>
@@ -66,7 +66,7 @@ class Activeside extends React.Component{
         return(
             <div className="main">
                 <div>
-                    Todos-User {this.state.c_id} <input type="button" value="Add" id="add_todos" onClick={this.newToDo}/>
+                    Todos-User {this.state.c_id} <input type="button" value="Add" id="add_todos" onClick={this.newToDoBtnWasPressed}/>
                     {this.state.newtodo===true?<Addtodo closeAddTodo={this.closeToDoScreen} c_id={this.state.c_id}
                     e_number={this.state.e_number}
                      extra_task_number={this.props.e_t_num}

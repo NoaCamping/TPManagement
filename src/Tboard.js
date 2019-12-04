@@ -72,19 +72,23 @@ class Tboard extends React.Component{
             }//of if
                    
            }) 
-           //updating all_tasks in state so it includes both automate and manually added tasks
+           //updating all_tasks in state so it includes both automatic and manually added tasks
            //console.log(all_tasks_ever);
            this.setState({"all_tasks": all_tasks_ever});
     }
 
     render(){
+       
         let thetasks=this.state.all_tasks;
         let tarr=[]; //array will contain specific client tasks according to given id
         for(var i=0; i<thetasks.length; i++)
         {
             if(thetasks[i].userId===parseInt(this.state.c_id))
                 tarr.push(thetasks[i])
+            else if(thetasks[i].userId===this.state.c_id)
+                tarr.push(thetasks[i])
         }
+        //last "else if" is when comparing to manual added mission
         return(
             <div className="main">
                  

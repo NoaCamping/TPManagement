@@ -5,7 +5,7 @@ import {firebase} from './firebase/firebase';
 class Addtodo extends React.Component{
     constructor(props){
         super(props);
-      this.state=({"task_loc":0})  
+      
     }
    
     //function saves the new task given by user to DB 
@@ -13,7 +13,7 @@ class Addtodo extends React.Component{
         
         let newTitle=document.getElementsByName("title")[0].value;
         let userid=this.props.c_id;
-        //number of new task for client number "userid"
+        //number of new manually added task 
         let newTaskNumber=this.props.extra_task_number
          /* *************************************************************************** */
          //counting number of tasks in main folder tasks for specific user
@@ -27,17 +27,17 @@ class Addtodo extends React.Component{
             console.log("t_loc is: "+t_location);
             firebase.database().ref("TasksExtra").child(newTaskNumber).set(
                 {
-                    title: newTitle,
-                    completed: false,
                     userId: userid,
-                    id: t_location+1
+                    id: t_location+1,
+                    title: newTitle,
+                    completed: false
                  }
             )
             
         })
         
         /* ************************************************************************** */
-        //updating number of added tasks in DB for each client
+        //updating number of manually added tasks in DB 
         await this.props.addOneToExtraTasksCounter(); 
         //closing the textbox
         await this.props.closeAddTodo(e);

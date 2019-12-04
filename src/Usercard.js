@@ -112,7 +112,7 @@ class Usercard extends React.Component{
             //console.log("client's email address is: "+e.target.value);
             this.setState({"currentEmail": e.target.value});
         }
-
+        //function updates number of manually added tasks
         addOneToExtraTasksCounter=()=>{
             this.setState({"extra_task_number": parseInt(this.state.extra_task_number)+1});
         }
