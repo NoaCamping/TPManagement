@@ -16,7 +16,7 @@ class Pboard extends React.Component{
     }
 
     async componentDidMount(){
-
+        let all_posts_ever;
         //Posts  - arranging DB according to userId number
         let jarr=[]; //temporary array to save posts which belong to specific user
         let user_number=1;
@@ -25,6 +25,7 @@ class Pboard extends React.Component{
             .then(resp=>{
                 const postbox=resp.data;
                 this.setState({"all_posts": postbox});
+                all_posts_ever=resp.data;
                 //deleting old information from DB in case DB is not empty
                 firebase.database().ref('Posts').remove();    
                 //inserting data 
@@ -62,11 +63,12 @@ class Pboard extends React.Component{
                             numOfPostsPerClient[currentid-1]++;
                             //console.log("post array is: "+numOfPostsPerClient);
                             numOfSons++;
+                            all_posts_ever.push(snapshot.child(numOfSons-1).val());
                         }
                     })           
                 }//of if
                }) 
-             
+               this.setState({"all_posts": all_posts_ever});     
     }
 
     render(){
@@ -76,8 +78,10 @@ class Pboard extends React.Component{
         {
             if(theposts[i].userId===parseInt(this.state.c_id))
                 parr.push(theposts[i])
+            else if (theposts[i].userId===this.state.c_id)
+                    parr.push(theposts[i])
         }
-        
+        //last "else if" is when comparing to manual added posts
         return(
             <div className="main">
                 

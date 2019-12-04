@@ -20,7 +20,8 @@ class Usercard extends React.Component{
             "whoneedscolor":"",
             "currentName":"",
             "currentEmail":"",
-            "extra_task_number":0
+            "extra_task_number":0,
+            "extra_post_number":0
         }
                      
     }
@@ -116,6 +117,10 @@ class Usercard extends React.Component{
         addOneToExtraTasksCounter=()=>{
             this.setState({"extra_task_number": parseInt(this.state.extra_task_number)+1});
         }
+        //function updates number of manually added posts
+        addOneToExtraPostsCounter=()=>{
+            this.setState({"extra_post_number": parseInt(this.state.extra_post_number)+1});
+        }
 
     render(){ 
              
@@ -138,6 +143,8 @@ class Usercard extends React.Component{
                                                 <Activeside c_id={this.state.whoneedscolor}
                                                 e_t_num={this.state.extra_task_number}
                                                 addOneToExtraTasksCounter={this.addOneToExtraTasksCounter}
+                                                e_p_num={this.state.extra_post_number}
+                                                addOneToExtraPostsCounter={this.addOneToExtraPostsCounter}
                                                 />
                                         </div>
                                        :

@@ -14,17 +14,31 @@ class Addpost extends React.Component{
         let newBody=document.getElementsByName("newBody")[0].value;
         let userid=this.props.c_id;
         //number of new post for client number "userid"
-        let newPostNumber=this.props.numOfPostsPerClient[parseInt(userid)-1];
+        let newPostNumber=this.props.extra_post_number
+         /* *************************************************************************** */
+         //counting number of tasks in main folder tasks for specific user
+        //inserting the new task in specific place in main folder
+        let p_location=0;
+        firebase.database().ref('Posts').child(userid).orderByKey().once("value")
+        .then(function(snapshot){
+            snapshot.forEach(function(childSnapshot){
+                p_location++;
+            })
+        //console.log("p_loc is: "+p_location);
+        /* **************************************************************** */    
         firebase.database().ref("PostsExtra").child(newPostNumber).set(
                 {
-                    title: newTitle,
-                    body: newBody,
                     userId: userid,
-                    id: newPostNumber
+                    id: newPostNumber,
+                    title: newTitle,
+                    body: newBody
+                   
                  }
             )
-        //updating number of added posts in DB for each client
-         
+        })
+        /* ************************************************************************** */
+        //updating number of manually added posts in DB 
+        await this.props.addOneToExtraPostsCounter();  
         //closing the post-textbox
         await this.props.closeAddPost(e);   
     }

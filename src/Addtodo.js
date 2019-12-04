@@ -24,7 +24,7 @@ class Addtodo extends React.Component{
             snapshot.forEach(function(childSnapshot){
                 t_location++;
             })
-            console.log("t_loc is: "+t_location);
+            //console.log("t_loc is: "+t_location);
             firebase.database().ref("TasksExtra").child(newTaskNumber).set(
                 {
                     userId: userid,

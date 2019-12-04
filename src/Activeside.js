@@ -90,6 +90,8 @@ class Activeside extends React.Component{
                     Posts-User {this.state.c_id} <input type="button" value="Add" id="add_posts" onClick={this.newAddedPost}/>
                     {this.state.newPost===true?<Addpost closeAddPost={this.newAddedPost2} c_id={this.state.c_id}
                     e_number={this.state.e_number}
+                    extra_post_number={this.props.e_p_num}
+                    addOneToExtraPostsCounter={this.props.addOneToExtraPostsCounter}
                    />: null}
                 
                     {this.state.newPost===false?

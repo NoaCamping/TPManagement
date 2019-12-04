@@ -88,7 +88,7 @@ class Tboard extends React.Component{
             else if(thetasks[i].userId===this.state.c_id)
                 tarr.push(thetasks[i])
         }
-        //last "else if" is when comparing to manual added mission
+        //last "else if" is when comparing to manual added missions
         return(
             <div className="main">
                  
